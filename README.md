@@ -1,2 +1,2 @@
 # scicalcV2
-Version two our @Addanine's scicalc
+Version two of @Addanine's scicalc
