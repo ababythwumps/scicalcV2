@@ -166,24 +166,50 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   document.addEventListener('keydown', (event) => {
-      const key = event.key;
-      if (/[0-9]/.test(key)) {
-          appendCharacter(key);
-      } else if (/[+\-*/]/.test(key)) {
-      } else if (/[+\-*/^]/.test(key)) {
-          appendOperator(key);
-      } else if (key === 'Enter') {
-
-      } else if (key === 'Backspace') {
-          deleteLast();
-      } else if (key === 'Escape') {
-          clearDisplay();
-      } else if (key === '(' || key === ')') {
-          appendParenthesis(key);
-      } else if (key === '.') {
-          appendCharacter(key);
-      }
+    const key = event.key;
+    buffer += key;
+    if (buffer.endsWith('sqrt')) {
+        buffer = buffer.slice(0, -4);
+        appendOperator('√');
+    } else if (buffer.endsWith('log')) {
+        buffer = buffer.slice(0, -3);
+        appendLog('10')
+    } else if (buffer.endsWith('asin')) {
+        buffer = buffer.slice(0, -3);
+        appendInverseTrigFunc('asin')
+    } else if (buffer.endsWith('acos')) {
+        buffer = buffer.slice(0, -3);
+        appendInverseTrigFunc('acos')
+    } else if (buffer.endsWith('Escape')) {
+      clearDisplay()
+    } else if (buffer.endsWith('atan')) {
+        buffer = buffer.slice(0, -3);
+        appendInverseTrigFunc('atan')
+    } else if (buffer.endsWith('sin')) {
+        buffer = buffer.slice(0, -3);
+        appendTrigFunc('sin')
+    } else if (buffer.endsWith('cos')) {
+        buffer = buffer.slice(0, -3);
+        appendTrigFunc('cos')
+    } else if (buffer.endsWith('tan')) {
+        buffer = buffer.slice(0, -3);
+        appendTrigFunc('tan')
+    } else if (/[0-9]/.test(key)) {
+        appendCharacter(key);
+    } else if (/[+\-*/^√]/.test(key)) {
+        appendOperator(key);
+    } else if (key === 'Enter') {
+        //calculate();
+    } else if (key === 'Backspace') {
+        deleteLast();
+        buffer = buffer.slice(0, -1);
+    }  else if (key === '(' || key === ')') {
+        appendParenthesis(key);
+    } else if (key === '.') {
+        appendCharacter(key);
+    }
   });
+
 
   window.clearDisplay = clearDisplay;
   window.deleteLast = deleteLast;
