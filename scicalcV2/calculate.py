@@ -1,5 +1,8 @@
-from sympy import symbols, solve, sympify
+"""import sympy as sp
+from sympy import symbols, solve, sympify"""
+import sympy as sp
 
+@app.route('/calculate', methods=['POST'])
 def calculate(equation_str):
     """Solve mathematical equations using sympy.
     
@@ -50,3 +53,39 @@ def calculate(equation_str):
         
     except Exception as e:
         return {'result': None, 'error': str(e)}
+    
+
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import urllib.parse
+import json
+
+class RequestHandler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        # Get the content length of the request
+        content_length = int(self.headers['Content-Length'])
+        # Read the body of the request
+        post_data = self.rfile.read(content_length).decode('utf-8')
+        # Parse the form data
+        parsed_data = urllib.parse.parse_qs(post_data)
+        param = parsed_data.get('param', [None])[0]  # Extract 'param'
+
+        # Call your function with the parameter
+        result = calculate(param)
+
+        # Send a 200 OK response
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json')
+        self.end_headers()
+
+        # Prepare the response
+        response = json.dumps({'result': result})
+        self.wfile.write(response.encode('utf-8'))
+
+def run(server_class=HTTPServer, handler_class=RequestHandler):
+    server_address = ('', 8000)  # Listen on all interfaces at port 8000
+    httpd = server_class(server_address, handler_class)
+    print("Starting server on http://localhost:8000/...")
+    httpd.serve_forever()
+
+if __name__ == "__main__":
+    run()

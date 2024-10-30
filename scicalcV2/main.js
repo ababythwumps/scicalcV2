@@ -210,6 +210,32 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
+  function calculate() {   
+    fetch('./calculate.py', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // or 'application/json' 'x-www-form-urlencoded' if needed
+      },
+      body: JSON.stringify({ param: inwardEquation }) // For form-urlencoded data
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.text(); // or response.text() based on your expected response type
+      })
+      .then(data => {
+        outwardEquation = data;
+        inwardEquation = data;
+        display.innerText = outwardEquation;
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
+
+    console.log("calculate function run, look at answer")
+  }
 
   window.clearDisplay = clearDisplay;
   window.deleteLast = deleteLast;
@@ -224,4 +250,5 @@ document.addEventListener("DOMContentLoaded", function() {
   window.appendInverseTrigFunc = appendInverseTrigFunc;
   window.appendLog = appendLog;
   window.appendExpFunc = appendExpFunc;
+  window.calculate = calculate;
 });
